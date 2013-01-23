@@ -6,6 +6,7 @@ import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.ExternalAnnotator;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Segment;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
@@ -38,21 +39,37 @@ public class PlantUmlExternalAnnotator extends ExternalAnnotator<String, SyntaxR
         if (!annotationResult.isError()) {
             return;
         }
-        int linePosition = annotationResult.getErrorLinePosition();
-        String[] split = file.getText().split("\n");
+        Segment errorSegment = calculateSegmentByLineOfError(file.getText(), annotationResult.getErrorLinePosition());
+        String errorMessage = generateErrorMessage(annotationResult);
+
+        Annotation annotation = holder.createErrorAnnotation(TextRange.create(errorSegment), errorMessage);
+        annotation.setTooltip(errorMessage);
+
+        for (int i = 1; i < annotationResult.getSuggest().size(); i++) {
+            annotation.registerFix(new MyIntentionAction(errorSegment, annotationResult.getSuggest().get(i)));
+        }
+    }
+
+    private static Segment calculateSegmentByLineOfError(String fileText, int errorLinePosition) {
+        String[] split = fileText.split("\n");
         int start = 0;
-        for (int i = 0; i < linePosition; i++) {
+        for (int i = 0; i < errorLinePosition; i++) {
             String line = split[i];
             start += line.length() + SIZE_OF_EOL_CHAR;
         }
-        int end = start + split[linePosition].length() + SIZE_OF_EOL_CHAR;
-        String errorText = generateErrorMessage(annotationResult);
-        Annotation annotation = holder.createErrorAnnotation(TextRange.create(start, end), errorText);
-        annotation.setTooltip(errorText);
+        final int end = start + split[errorLinePosition].length() + SIZE_OF_EOL_CHAR;
+        final int finalStart = start;
+        return new Segment() {
+            @Override
+            public int getStartOffset() {
+                return finalStart;
+            }
 
-        for (int i = 1; i < annotationResult.getSuggest().size(); i++) {
-            annotation.registerFix(new MyIntentionAction(start, end, annotationResult.getSuggest().get(i)));
-        }
+            @Override
+            public int getEndOffset() {
+                return end;
+            }
+        };
     }
 
     private String generateErrorMessage(SyntaxResult annotationResult) {
@@ -67,14 +84,13 @@ public class PlantUmlExternalAnnotator extends ExternalAnnotator<String, SyntaxR
     }
 
     private static class MyIntentionAction implements IntentionAction {
-
-        private final int start;
-        private final int end;
+        private final int startOffset;
+        private final int endOffset;
         private final String suggestion;
 
-        public MyIntentionAction(int start, int end, String suggestion) {
-            this.start = start;
-            this.end = end;
+        public MyIntentionAction(Segment errorSegment, String suggestion) {
+            this.startOffset = errorSegment.getStartOffset();
+            this.endOffset = errorSegment.getEndOffset();
             this.suggestion = suggestion;
         }
 
@@ -97,7 +113,7 @@ public class PlantUmlExternalAnnotator extends ExternalAnnotator<String, SyntaxR
 
         @Override
         public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-            editor.getDocument().replaceString(start, end - SIZE_OF_EOL_CHAR, suggestion);
+            editor.getDocument().replaceString(startOffset, endOffset - SIZE_OF_EOL_CHAR, suggestion);
         }
 
         @Override

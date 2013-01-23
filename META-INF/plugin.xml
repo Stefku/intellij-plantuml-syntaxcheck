@@ -14,7 +14,9 @@
 	<idea-version since-build="107.105"/>
 
 	<change-notes>
-		Version 0.0.1: Use plantuml library version 7950
+		Version 0.0.1
+		Use plantuml library version 7950.
+		Known issues: Start and end tags are not checked.
 	</change-notes>
 
 	<application-components>
