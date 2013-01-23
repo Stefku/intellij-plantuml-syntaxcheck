@@ -1,0 +1,35 @@
+<idea-plugin version="2">
+	<id>de.docksnet.puml.syntaxchecker</id>
+	<name>PlantUML Syntax Check</name>
+
+	<description>
+		Checks the syntax of a PlantUML file via ExternalAnnotator based on SyntaxChecker of plantuml.jar.
+		This plugin requires idea plugin 'PlantUML integration' (http://plugins.jetbrains.com/plugin?pluginId=7017).
+		(EXPERIMENTAL)
+	</description>
+
+	<version>1.0.0</version>
+	<vendor>Stefan Zeller</vendor>
+
+	<idea-version since-build="107.105"/>
+
+	<change-notes>
+		Version 0.0.1: Use plantuml library version 7950
+	</change-notes>
+
+	<application-components>
+		<!-- Add your application components here -->
+	</application-components>
+
+	<project-components>
+		<!-- Add your project components here -->
+	</project-components>
+
+	<actions>
+		<!-- Add your actions here -->
+	</actions>
+
+	<extensions defaultExtensionNs="com.intellij">
+		<externalAnnotator language="PUML" implementationClass="de.docksnet.puml.PlantUmlExternalAnnotator"/>
+	</extensions>
+</idea-plugin>
