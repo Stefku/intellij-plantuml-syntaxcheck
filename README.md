@@ -1,0 +1,2 @@
+intellij-plantuml-syntaxcheck
+=============================
