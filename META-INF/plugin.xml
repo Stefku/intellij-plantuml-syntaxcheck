@@ -3,20 +3,20 @@
 	<name>PlantUML Syntax Check</name>
 
 	<description>
+		(EXPERIMENTAL)
 		Checks the syntax of a PlantUML file via ExternalAnnotator based on SyntaxChecker of plantuml.jar.
 		This plugin requires idea plugin 'PlantUML integration' (http://plugins.jetbrains.com/plugin?pluginId=7017).
-		(EXPERIMENTAL)
 	</description>
 
-	<version>1.0.0</version>
+	<version>0.1.0</version>
 	<vendor>Stefan Zeller</vendor>
 
 	<idea-version since-build="107.105"/>
 
 	<change-notes>
-		Version 0.0.1
+		Version 0.1.0
 		Use plantuml library version 7950.
-		Known issues: Start and end tags are not checked.
+		Known issues: Start and end tags are not checked. Text in front of start tag is not supported.
 	</change-notes>
 
 	<application-components>
