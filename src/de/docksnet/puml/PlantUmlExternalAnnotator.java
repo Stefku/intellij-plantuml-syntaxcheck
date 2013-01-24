@@ -15,6 +15,8 @@ import net.sourceforge.plantuml.syntax.SyntaxResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Scanner;
+
 /**
  * This ExternalAnnotator uses the SyntaxChecker by PlantUML to annotate PUML files
  */
@@ -50,15 +52,43 @@ public class PlantUmlExternalAnnotator extends ExternalAnnotator<String, SyntaxR
         }
     }
 
-    private static Segment calculateSegmentByLineOfError(String fileText, int errorLinePosition) {
-        String[] split = fileText.split("\n");
-        int start = 0;
-        for (int i = 0; i < errorLinePosition; i++) {
-            String line = split[i];
-            start += line.length() + SIZE_OF_EOL_CHAR;
+    static Segment calculateSegmentByLineOfError(String fileText, int errorLinePosition) {
+        // TODO extract class
+        Scanner scanner = new Scanner(fileText);
+
+        int errorLineStart = -1;
+        int errorLineEnd = -1;
+
+        State state = State.BEFORE_START;
+        int charCountToCurrentLine = 0;
+        int currentLineNumber = 0;
+        int lineWithTagStartuml = -1;
+        while (scanner.hasNext()) {
+            String currentLine = scanner.nextLine();
+            int currentLineLength = currentLine.length() + SIZE_OF_EOL_CHAR;
+            if (state != State.WITHIN_START && currentLine.startsWith("@startuml")) {
+                state = State.WITHIN_START;
+                lineWithTagStartuml = currentLineNumber;
+            }
+            // do something
+            if (state == State.WITHIN_START) {
+                if (lineWithTagStartuml + errorLinePosition == currentLineNumber) {
+                    errorLineStart = charCountToCurrentLine;
+                    errorLineEnd = errorLineStart + currentLineLength;
+                    break;
+                }
+            }
+            charCountToCurrentLine += currentLineLength;
+            currentLineNumber += 1;
         }
-        final int end = start + split[errorLinePosition].length() + SIZE_OF_EOL_CHAR;
-        final int finalStart = start;
+
+        if (errorLineStart == -1) {
+            throw new IllegalStateException("Could not calculate error line");
+        }
+
+        final int finalStart = errorLineStart;
+        final int finalEnd = errorLineEnd;
+
         return new Segment() {
             @Override
             public int getStartOffset() {
@@ -67,7 +97,7 @@ public class PlantUmlExternalAnnotator extends ExternalAnnotator<String, SyntaxR
 
             @Override
             public int getEndOffset() {
-                return end;
+                return finalEnd;
             }
         };
     }
@@ -121,4 +151,6 @@ public class PlantUmlExternalAnnotator extends ExternalAnnotator<String, SyntaxR
             return true;
         }
     }
+
+    static enum State {BEFORE_START, WITHIN_START}
 }
