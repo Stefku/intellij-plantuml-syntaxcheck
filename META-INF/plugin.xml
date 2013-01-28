@@ -8,15 +8,36 @@
 		This plugin requires idea plugin 'PlantUML integration' (http://plugins.jetbrains.com/plugin?pluginId=7017).
 	</description>
 
-	<version>0.1.0</version>
+	<version>0.2.0</version>
 	<vendor>Stefan Zeller</vendor>
 
 	<idea-version since-build="107.105"/>
 
 	<change-notes>
-		Version 0.1.0
-		Use plantuml library version 7950.
-		Known issues: Start and end tags are not checked. Text in front of start tag is not supported.
+		<![CDATA[
+		<p>0.2.0</p>
+		<ul>
+			<li>Highlight if @startuml or @enduml is missing</li>
+			<li>Use plantuml library version 7953</li>
+			<li>New licence: LGPL</li>
+			<li>Known issues:
+				<ol>
+				<li>Tag @startuml must be on first line, otherwise an error annotation occurs</li>
+				<li>Tag @enduml must be followed with newline, otherwise an error annotation occurs</li>
+				</ol>
+			</li>
+		</ul>
+		<p>0.1.0</p>
+		<ul>
+			<li>Use plantuml library version 7950</li>
+			<li>Known issues:
+				<ol>
+				<li>Start and end tags are not checked</li>
+				<li>Text in front of start tag is not supported</li>
+				</ol>
+			</li>
+		</ul>
+		]]>
 	</change-notes>
 
 	<application-components>
