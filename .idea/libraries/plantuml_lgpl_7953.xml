@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="plantuml-lgpl-7953">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/plantuml-lgpl-7953.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

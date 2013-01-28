@@ -3,9 +3,8 @@ package de.docksnet.puml;
 import com.intellij.openapi.util.Segment;
 import org.junit.Test;
 
-import static de.docksnet.puml.PlantUmlExternalAnnotator.*;
+import static de.docksnet.puml.PlantUmlExternalAnnotator.calculateSegmentByLineOfError;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class PlantUmlExternalAnnotatorTest {
 
@@ -35,15 +34,4 @@ public class PlantUmlExternalAnnotatorTest {
         assertEquals(15 + "error\n".length(), segment.getEndOffset());
     }
 
-    @Test
-    public void calculateSegmentByLineOfErrorNoStart() throws Exception {
-        // given
-        String source = "\nfoo\nerror\n@enduml\n";
-
-        // when
-        Segment segment = calculateSegmentByLineOfError(source, 1);
-
-        // then
-        assertTrue(EMPTY_SEGMENT.equals(segment));
-    }
 }

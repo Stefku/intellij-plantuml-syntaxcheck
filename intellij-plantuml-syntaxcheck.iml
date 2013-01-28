@@ -9,15 +9,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library name="plantuml-7950">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/plantuml-7950.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="library" name="plantuml-lgpl-7953" level="project" />
+    <orderEntry type="library" scope="TEST" name="org.mockito:mockito-all:1.9.5" level="project" />
   </component>
 </module>
 
