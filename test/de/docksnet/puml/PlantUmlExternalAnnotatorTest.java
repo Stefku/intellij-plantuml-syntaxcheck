@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import static de.docksnet.puml.PlantUmlExternalAnnotator.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class PlantUmlExternalAnnotatorTest {
 
@@ -34,12 +35,15 @@ public class PlantUmlExternalAnnotatorTest {
         assertEquals(15 + "error\n".length(), segment.getEndOffset());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void calculateSegmentByLineOfErrorNoStart() throws Exception {
         // given
         String source = "\nfoo\nerror\n@enduml\n";
 
         // when
-        calculateSegmentByLineOfError(source, 1);
+        Segment segment = calculateSegmentByLineOfError(source, 1);
+
+        // then
+        assertTrue(EMPTY_SEGMENT.equals(segment));
     }
 }

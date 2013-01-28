@@ -24,7 +24,7 @@ public class PlantUmlExternalAnnotator extends ExternalAnnotator<String, SyntaxR
 
     public static final int SIZE_OF_EOL_CHAR = 1;
     public static final String TAG_STARTUML = "@startuml";
-    private static final Segment EMPTY_SEGMENT = new Segment() {
+    public static final Segment EMPTY_SEGMENT = new Segment() {
         @Override
         public int getStartOffset() {
             return -1;
